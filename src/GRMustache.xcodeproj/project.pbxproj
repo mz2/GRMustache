@@ -51,7 +51,7 @@
 		563D672015264EDA008628C5 /* JRSwizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 563D670115264EDA008628C5 /* JRSwizzle.h */; };
 		563D672215264EDA008628C5 /* JRSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 563D670215264EDA008628C5 /* JRSwizzle.m */; };
 		563D672315264EDA008628C5 /* JRSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 563D670215264EDA008628C5 /* JRSwizzle.m */; };
-		5641FD27163C517A0093407A /* GRMustacheContext_private.h in Headers */ = {isa = PBXBuildFile; fileRef = 5641FD25163C517A0093407A /* GRMustacheContext_private.h */; };
+		5641FD27163C517A0093407A /* GRMustacheContext_private.h in Headers */ = {isa = PBXBuildFile; fileRef = 5641FD25163C517A0093407A /* GRMustacheContext_private.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5641FD28163C517A0093407A /* GRMustacheContext_private.h in Headers */ = {isa = PBXBuildFile; fileRef = 5641FD25163C517A0093407A /* GRMustacheContext_private.h */; };
 		5641FD2C163C54DA0093407A /* GRMustacheContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 5641FD2B163C54DA0093407A /* GRMustacheContext.m */; };
 		5641FD2D163C54DA0093407A /* GRMustacheContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 5641FD2B163C54DA0093407A /* GRMustacheContext.m */; };
@@ -833,18 +833,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				56DEC2BC152631300031E8DC /* GRMustache.h in Headers */,
-				56DEC2C0152631300031E8DC /* GRMustache_private.h in Headers */,
 				56DEC2C2152631300031E8DC /* GRMustacheAvailabilityMacros.h in Headers */,
 				56DEC2C4152631300031E8DC /* GRMustacheAvailabilityMacros_private.h in Headers */,
 				56DEC2CC152631300031E8DC /* GRMustacheError.h in Headers */,
 				56DEC2E4152631300031E8DC /* GRMustacheTemplateComponent_private.h in Headers */,
 				56DEC2EA152631300031E8DC /* GRMustacheSectionTag_private.h in Headers */,
+				56148B511639CADD00ADAF75 /* GRMustacheContext.h in Headers */,
 				56DEC2EC152631300031E8DC /* GRMustacheTemplate.h in Headers */,
-				56DEC2F0152631300031E8DC /* GRMustacheTemplate_private.h in Headers */,
 				56DEC2F2152631300031E8DC /* GRMustacheTagDelegate.h in Headers */,
 				56DEC2F6152631300031E8DC /* GRMustacheCompiler_private.h in Headers */,
 				56DEC2F8152631300031E8DC /* GRMustacheTemplateRepository.h in Headers */,
+				5641FD27163C517A0093407A /* GRMustacheContext_private.h in Headers */,
 				56DEC2FC152631300031E8DC /* GRMustacheTemplateRepository_private.h in Headers */,
+				56DEC2C0152631300031E8DC /* GRMustache_private.h in Headers */,
+				56DEC2F0152631300031E8DC /* GRMustacheTemplate_private.h in Headers */,
 				56DEC300152631300031E8DC /* GRMustacheTextComponent_private.h in Headers */,
 				56DEC304152631300031E8DC /* GRMustacheToken_private.h in Headers */,
 				56DEC308152631300031E8DC /* GRMustacheParser_private.h in Headers */,
@@ -860,11 +862,9 @@
 				56EB54CB160ED8AB006A5F57 /* GRMustacheTemplateOverride_private.h in Headers */,
 				5672899E163563DD00767ACB /* GRMustacheFilter_private.h in Headers */,
 				56AC19BA163852CC009AAC1A /* GRMustacheRendering.h in Headers */,
-				56148B511639CADD00ADAF75 /* GRMustacheContext.h in Headers */,
 				56148B62163A5B8900ADAF75 /* GRMustacheVariableTag_private.h in Headers */,
 				56148B6C163BE4BD00ADAF75 /* GRMustacheTag.h in Headers */,
 				56148B6F163BEB6400ADAF75 /* GRMustacheTag_private.h in Headers */,
-				5641FD27163C517A0093407A /* GRMustacheContext_private.h in Headers */,
 				569EB2E5164030E300C09632 /* GRMustacheAccumulatorTag_private.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -991,7 +991,7 @@
 		56DEC19C15262FC80031E8DC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0500;
 			};
 			buildConfigurationList = 56DEC19F15262FC80031E8DC /* Build configuration list for PBXProject "GRMustache" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1260,11 +1260,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1278,11 +1280,19 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx;
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"-ObjC",
+				);
+				PROVISIONING_PROFILE = "F297DFC8-E35F-40B6-A9A2-D599D33D0E30";
+				SDKROOT = macosx10.8;
+				VALID_ARCHS = x86_64;
 			};
 			name = Debug;
 		};
@@ -1290,11 +1300,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1302,46 +1314,67 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				SDKROOT = macosx;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"-ObjC",
+				);
+				PROVISIONING_PROFILE = "F297DFC8-E35F-40B6-A9A2-D599D33D0E30";
+				SDKROOT = macosx10.8;
+				VALID_ARCHS = x86_64;
 			};
 			name = Release;
 		};
 		56DEC265152631040031E8DC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CODE_SIGN_IDENTITY = "Developer ID Application";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				EXECUTABLE_PREFIX = lib;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VALID_ARCHS = x86_64;
 			};
 			name = Debug;
 		};
 		56DEC266152631040031E8DC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CODE_SIGN_IDENTITY = "Developer ID Application";
 				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VALID_ARCHS = x86_64;
 			};
 			name = Release;
 		};
 		56DEC268152631040031E8DC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				INFOPLIST_FILE = "tests/GRMustache6Tests-Info.plist";
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "F297DFC8-E35F-40B6-A9A2-D599D33D0E30";
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
@@ -1349,13 +1382,13 @@
 		56DEC269152631040031E8DC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				INFOPLIST_FILE = "tests/GRMustache6Tests-Info.plist";
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "F297DFC8-E35F-40B6-A9A2-D599D33D0E30";
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
@@ -1363,7 +1396,7 @@
 		56DEC28C1526311C0031E8DC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "";
 				DSTROOT = /tmp/GRMustache6_iOS.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_THUMB_SUPPORT = NO;
@@ -1371,6 +1404,7 @@
 				OTHER_CFLAGS = "-DTARGET_OS_IPHONE";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 			};
@@ -1379,7 +1413,7 @@
 		56DEC28D1526311C0031E8DC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "";
 				DSTROOT = /tmp/GRMustache6_iOS.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_THUMB_SUPPORT = NO;
@@ -1390,6 +1424,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				VALIDATE_PRODUCT = YES;
@@ -1399,7 +1434,7 @@
 		56DEC28F1526311C0031E8DC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
@@ -1409,6 +1444,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = octest;
 			};
@@ -1417,7 +1453,7 @@
 		56DEC2901526311C0031E8DC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
@@ -1427,6 +1463,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = octest;
