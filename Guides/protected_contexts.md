@@ -1,4 +1,4 @@
-[up](../../../../GRMustache#documentation), [next](../../../tree/master/Guides/sample_code)
+[up](../../../../GRMustache#documentation), [next](compatibility.md)
 
 Protected Contexts
 ==================
@@ -6,7 +6,7 @@ Protected Contexts
 The Mustache key shadowing
 --------------------------
 
-As Mustache sections get nested, the [context stack](runtime.md) expands:
+As Mustache sections get nested, the [context stack](runtime.md#the-context-stack) expands:
 
     {{#person}}
         {{#pet}}
@@ -23,14 +23,11 @@ This is all good. However, the children contexts shadow their parents: keys get 
         {{/pet}}
     {{/person}}
 
-Some will say: "Mustache needs a syntax that lets me access outer contexts!".
-
-It would surely help. However this is not the main trouble.
 
 Robust code in an untrusted environment
 ---------------------------------------
 
-The main trouble is that you may want to write robust and/or reusable [partials](partials.md), [filters](filters.md), [rendering objects](rendering_objects.md) that process *untrusted data* in *untrusted templates*.
+Key shadowing is a threat on robust and/or reusable [partials](partials.md), [filters](filters.md), [rendering objects](rendering_objects.md) that process *untrusted data* in *untrusted templates*.
 
 Because of untrusted data, you can not be sure that your precious keys won't be shadowed.
 
@@ -38,14 +35,15 @@ Because of untrusted templates, you can not be sure that your precious keys will
 
 Untrusted data and templates do exist, I've seen them: at the minimum they are the data and the templates built by the [future you](http://xkcd.com/302/).
 
+
 Protected objects
 -----------------
 
 GRMustache addresses this concern by letting you store *protected objects* in the *base context* of a template.
 
-The base context contains [context stack values](runtime.md) and [tag delegates](delegate.md) that are always available for the template rendering. It contains all the ready for use filters of the [filter library](filters.md), for example. Context objects are detailed in the [Rendering Objects Guide](rendering_objects.md).
+The base context contains [context stack values](runtime.md#the-context-stack) and [tag delegates](delegate.md) that are always available for the template rendering. It contains all the ready for use tools of the [standard library](standard_library.md), for example. Context objects are detailed in the [Rendering Objects Guide](rendering_objects.md).
 
-You can derive a new context that contain protected objects with the `contextByAddingProtectedObject:` method:
+You can extend it with a protected object with the `extendBaseContextWithProtectedObject:` method:
 
 ```objc
 
@@ -54,10 +52,12 @@ id protectedData = @{
 };
 
 GRMustacheTemplate *template = [GRMustacheTemplate templateFrom...];
-template.baseContext = [template.baseContext contextByAddingProtectedObject:protectedData];
+[template extendBaseContextWithProtectedObject:protectedData];
 ```
 
 Now the `safe` key can not be shadowed: it will always evaluate to the `important` value.
+
+See the [GRMustacheTemplate Class Reference](http://groue.github.io/GRMustache/Reference/Classes/GRMustacheTemplate.html) for a full discussion of `extendBaseContextWithProtectedObject:`.
 
 
 Protected namespaces
@@ -94,7 +94,7 @@ id modules = @{
 GRMustacheTemplate *template = [GRMustacheTemplate templateFromResource:@"Document" bundle:nil error:NULL];
 
 // "import string"
-template.baseContext = [template.baseContext contextByAddingProtectedObject:modules];
+[template extendBaseContextWithProtectedObject:modules];
 
 NSString *rendering = [template renderObject:nil error:NULL];
 ```
@@ -110,6 +110,7 @@ See how the `digits` key, alone on the third and fourth line, has not been rende
 
 Conclusion: you must use full paths to your deep protected objects, or they won't be found.
 
+
 Compatibility with other Mustache implementations
 -------------------------------------------------
 
@@ -118,4 +119,4 @@ The [Mustache specification](https://github.com/mustache/spec) does not have any
 **If your goal is to design templates that remain compatible with [other Mustache implementations](https://github.com/defunkt/mustache/wiki/Other-Mustache-implementations), use protected objects with great care.**
 
 
-[up](../../../../GRMustache#documentation), [next](../../../tree/master/Guides/sample_code)
+[up](../../../../GRMustache#documentation), [next](compatibility.md)

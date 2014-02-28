@@ -1,4 +1,4 @@
-[up](../../../../tree/master/Guides/sample_code), [next](localization.md)
+[up](../../../../tree/master/Guides/sample_code), [next](../forking.md)
 
 Collection Indexes
 ==================
@@ -96,7 +96,7 @@ The protocol requires the `transformedValue:` method, that returns the result of
 
 Since we need a custom rendering of the array, the result of the filter will conform to the `GRMustacheRendering` protocol (see the [Rendering Objects Guide](../rendering_objects.md)).
 
-Rendering objects take full responsability of their rendering. Our will render the section tag as many times as the array has items, extending the [context stack](../runtime.md) with both a dictionary containing the special keys, and the array items that will provide the `name` key.
+Rendering objects take full responsability of their rendering. Our will render the section tag as many times as the array has items, extending the [context stack](../runtime.md#the-context-stack) with both a dictionary containing the special keys, and the array items that will provide the `name` key.
 
 ```objc
 @implementation PositionFilter
@@ -149,8 +149,10 @@ Rendering objects take full responsability of their rendering. Our will render t
 @end
 ```
 
+See the [GRMustacheTag Class Reference](http://groue.github.io/GRMustache/Reference/Classes/GRMustacheTag.html) and [GRMustacheContext Class Reference](http://groue.github.io/GRMustache/Reference/Classes/GRMustacheContext.html) for a full documentation of GRMustacheTag and GRMustacheContext, and details on the `contextByAddingObject:` and `renderContentWithContext:HTMLSafe:error:` methods.
+
 Writing [filters](../filters.md) that return [rendering objects](../rendering_objects.md) lead to code that is pretty close to the [Handlebars.js block helpers](http://handlebarsjs.com/block_helpers.html). You may enjoy comparing the code above to the [`each_with_index` Handlebars helper](https://gist.github.com/1048968).
 
 **[Download the code](../../../../tree/master/Guides/sample_code/indexes)**
 
-[up](../../../../tree/master/Guides/sample_code), [next](localization.md)
+[up](../../../../tree/master/Guides/sample_code), [next](../forking.md)

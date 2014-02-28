@@ -1,6 +1,6 @@
 // The MIT License
 //
-// Copyright (c) 2012 Gwendal Roué
+// Copyright (c) 2014 Gwendal Roué
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -83,6 +83,21 @@
     template.baseContext = [template.baseContext contextByAddingProtectedObject:@{ @"safe": @{ @"name": @"important" } }];
     NSString *rendering = [template renderObject:@{ @"name": @"not important" } error:NULL];
     STAssertEqualObjects(rendering, @"not important", @"");
+}
+
+- (void)testRenderingContextsDoesHonorProtectedObjects
+{
+    // we expect the rendering to be gold
+    GRMustacheTemplate *template = [GRMustacheTemplate templateFromString:@"{{#object}}{{precious}}{{/}}" error:NULL];
+    GRMustacheContext *context = [template.baseContext contextByAddingProtectedObject:@{@"precious":@"gold"}];
+    context = [context contextByAddingObject:@{@"object":@{@"precious":@"aluminum"}}];
+    
+    // protected stack does apply
+    STAssertEqualObjects([template renderObject:context error:NULL], @"gold", @"");
+    
+    // protected stack does apply
+    template.baseContext = context;
+    STAssertEqualObjects([template renderObject:nil error:NULL], @"gold", @"");
 }
 
 @end

@@ -4,15 +4,14 @@
 		<meta http-equiv="Content-Type" content="html/html; charset=utf-8" />
 		<title>GRMustacheTemplateRepositoryDataSource Protocol Reference</title>
 		<meta id="xcode-display" name="xcode-display" content="render"/>
-		<meta name="viewport" content="width=550" />
 		<link rel="stylesheet" type="text/css" href="../css/styles.css" media="all" />
 		<link rel="stylesheet" type="text/css" media="print" href="../css/stylesPrint.css" />
-		<meta name="generator" content="appledoc 2.0.6 (build 789)" />
+		<meta name="generator" content="appledoc 2.2 (build 961)" />
 	</head>
 	<body>
 		<header id="top_header">
 			<div id="library" class="hideInXcode">
-				<h1><a id="libraryTitle" href="../index.html">GRMustache 6.1 </a></h1>
+				<h1><a id="libraryTitle" href="../index.html">GRMustache 6.9 </a></h1>
 				<a id="developerHome" href="../index.html">Gwendal Roué</a>
 			</div>
 			
@@ -64,10 +63,6 @@
 
 <li role="treeitem" id="task_treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#tasks">Tasks</a></span><ul>
 	
-	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#task_Building Template IDs from Template Names">Building Template IDs from Template Names</a></span></li>
-	
-	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#task_Providing Template Strings from Template IDs">Providing Template Strings from Template IDs</a></span></li>
-	
 </ul></li>
 
 
@@ -115,8 +110,8 @@
 </tr>
 						</tbody></table></div>
 					
-					
-					
+                    
+                    
 					
 					<div class="section section-overview">
 						<a title="Overview" name="overview"></a>
@@ -138,32 +133,19 @@ template and partial names.</p>
 						<h2 class="subtitle subtitle-tasks">Tasks</h2>
 						
 						
-						<a title="Building Template IDs from Template Names" name="task_Building Template IDs from Template Names"></a>
-						<h3 class="subsubtitle task-title">Building Template IDs from Template Names</h3>
+						
+						
 
 						<ul class="task-list">
 							<li>
 	<span class="tooltip">
 		<code><a href="#//api/name/templateRepository:templateIDForName:relativeToTemplateID:">&ndash;&nbsp;templateRepository:templateIDForName:relativeToTemplateID:</a></code>
-		<span class="tooltip"><p>Returns a template ID, that is to say an object that uniquely identifies a
-template or a template partial.</p></span>
 	</span>
 	
 	<span class="task-item-suffix">required method</span>
-</li>
-						</ul>
-						
-						
-						<a title="Providing Template Strings from Template IDs" name="task_Providing Template Strings from Template IDs"></a>
-						<h3 class="subsubtitle task-title">Providing Template Strings from Template IDs</h3>
-
-						<ul class="task-list">
-							<li>
+</li><li>
 	<span class="tooltip">
 		<code><a href="#//api/name/templateRepository:templateStringForTemplateID:error:">&ndash;&nbsp;templateRepository:templateStringForTemplateID:error:</a></code>
-		<span class="tooltip"><p>Provided with a template ID that comes from
-<a href="#//api/name/templateRepository:templateIDForName:relativeToTemplateID:">templateRepository:templateIDForName:relativeToTemplateID:</a>,
-returns a Mustache template string.</p></span>
 	</span>
 	
 	<span class="task-item-suffix">required method</span>
@@ -244,7 +226,7 @@ template ID.</p></dd>
 GRMustacheTemplateRepositoryDataSource would define, for itself, what kind of
 object would identity a template or a partial.</p>
 
-<p>For instance, a file-based data source may use NSString objects containing
+<p>For example, a file-based data source may use NSString objects containing
 paths to the templates.</p>
 
 <p>You should try to choose &ldquo;human-readable&rdquo; template IDs, because template IDs
@@ -342,11 +324,11 @@ that describes the problem.</p></dd>
 	
 	<div class="method-subsection discussion-section">
 		<h4 class="method-subtitle">Discussion</h4>
-		<p>For instance, a file-based data source may interpret the template ID as a
+		<p>For example, a file-based data source may interpret the template ID as a
 NSString object containing paths to the template, and return the file
 content.</p>
 
-<p>As usually, whenever this method returns nil, the <em>error</em> parameter should
+<p>As usual, whenever this method returns nil, the <em>error</em> parameter should
 point to a valid NSError. This NSError would eventually reach the library
 user.</p>
 	</div>
@@ -368,6 +350,8 @@ user.</p>
 					</div>
 					
 					
+                    
+                    
 				</div>
 				<div class="main-navigation navigation-bottom">
 					<ul>
@@ -378,9 +362,9 @@ user.</p>
 				<div id="footer">
 					<hr />
 					<div class="footer-copyright">
-						<p><span class="copyright">&copy; 2012 Gwendal Roué. All rights reserved. (Last updated: 2012-11-02)</span><br />
+						<p><span class="copyright">&copy; 2014 Gwendal Roué. All rights reserved. (Last updated: 2014-01-27)</span><br />
 						
-						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.0.6 (build 789)</a>.</span></p>
+						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2 (build 961)</a>.</span></p>
 						
 					</div>
 				</div>

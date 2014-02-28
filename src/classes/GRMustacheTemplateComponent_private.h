@@ -1,6 +1,6 @@
 // The MIT License
 // 
-// Copyright (c) 2012 Gwendal Roué
+// Copyright (c) 2014 Gwendal Roué
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +22,9 @@
 
 #import <Foundation/Foundation.h>
 #import "GRMustacheAvailabilityMacros_private.h"
+#import "GRMustacheContentType.h"
 
 @class GRMustacheContext;
-@class GRMustacheTemplateRepository;
 
 /**
  * The protocol for "template components".
@@ -39,7 +39,7 @@
  * context, through their `renderWithContext:inBuffer:error:`
  * implementation.
  * 
- * For instance, the template string "hello {{name}}!" would give four template
+ * For example, the template string "hello {{name}}!" would give four template
  * components:
  *
  * - a GRMustacheTextComponent that renders "hello ".
@@ -62,15 +62,18 @@
 /**
  * Appends the rendering of the receiver to a buffer.
  * 
- * @param context  A rendering context
- * @param buffer   A mutable string
- * @param error    TODO
+ * @param requiredContentType  The required content type of the rendering
+ * @param buffer               A mutable string
+ * @param context              A rendering context
+ * @param error                If there is an error performing the rendering,
+ *                             upon return contains an NSError object that
+ *                             describes the problem.
  *
- * @return TODO
+ * @return YES if the receiver could append its rendering to the buffer.
  *
  * @see GRMustacheContext
  */
-- (BOOL)renderInBuffer:(NSMutableString *)buffer withContext:(GRMustacheContext *)context error:(NSError **)error GRMUSTACHE_API_INTERNAL;
+- (BOOL)renderContentType:(GRMustacheContentType)requiredContentType inBuffer:(NSMutableString *)buffer withContext:(GRMustacheContext *)context error:(NSError **)error GRMUSTACHE_API_INTERNAL;
 
 /**
  * In the context of overridable partials, return the component that should be
@@ -78,7 +81,7 @@
  * component.
  *
  * All classes conforming to the GRMustacheTemplateComponent protocol return
- * _component_, but GRMustacheSectionTag, GRMustacheTemplateOverride, and
+ * _component_, but GRMustacheSectionTag, GRMustachePartialOverride, and
  * GRMustacheTemplate.
  *
  * @param component  A template component
@@ -88,7 +91,7 @@
  *
  * @see GRMustacheSectionTag
  * @see GRMustacheTemplate
- * @see GRMustacheTemplateOverride
+ * @see GRMustachePartialOverride
  */
 - (id<GRMustacheTemplateComponent>)resolveTemplateComponent:(id<GRMustacheTemplateComponent>)component GRMUSTACHE_API_INTERNAL;
 @end

@@ -1,4 +1,4 @@
-[up](../../../../GRMustache#documentation), [next](delegate.md)
+[up](../../../../GRMustache#documentation), [next](rendering_objects.md)
 
 Filters
 =======
@@ -23,32 +23,6 @@ You apply a filter just like calling a function, with parentheses:
 - Filters can take several arguments: `{{ localize(date, format) }}`.
 
 - Filters can return filters: `{{ f(x)(y) }}`.
-
-
-Standard filters library
-------------------------
-
-GRMustache ships with a bunch of already implemented filters:
-
-- `isEmpty`
-    
-    Returns YES if the input is nil, [NSNull null], or an empty enumerable object, or an empty string. Returns NO otherwise.
-
-- `isBlank`
-    
-    Returns YES if the input is nil, [NSNull null], or an empty enumerable object, or a string made of zero or more white space characters (space, tabs, newline). Returns NO otherwise.
-
-- `capitalized`
-    
-    Given "johannes KEPLER", it returns "Johannes Kepler".
-    
-- `lowercase`
-    
-    Given "johannes KEPLER", it returns "johannes kepler".
-
-- `uppercase`
-    
-    Given "johannes KEPLER", it returns "JOHANNES KEPLER".
 
 
 Defining your own filters
@@ -155,6 +129,23 @@ Final rendering:
     2012-10-28
 
 
+Filters that return rendering objects
+-------------------------------------
+
+"Rendering objects" are objects that perform a custom rendering. They are described in detail in the [Rendering Objects Guide](rendering_objects.md).
+
+A fundamental technique of advanced GRMustache rendering is filters that return rendering objects. For example:
+
+    I have {{ cats.count }} {{# pluralize(cats.count) }}cat{{/ }}.
+
+would render, depending on the number of cats:
+
+    I have 1 cat.
+    I have 5 cats.
+
+The `pluralize` filter returns an object that is able to pluralize the inner content of the section it is attached to. Go check the [Rendering Objects Guide](rendering_objects.md) for more details.
+
+
 Filters namespaces
 ------------------
 
@@ -178,10 +169,10 @@ NSString *rendering = [template renderObject:data error:NULL];
 ```
 
 
-Filters exceptions
-------------------
+Filters errors
+--------------
 
-Should a filter be missing, or should the matching object not conform to the `GRMustacheFilter` protocol, GRMustache will raise an exception of name `GRMustacheRenderingException`.
+Should a filter be missing, or should the matching object not conform to the `GRMustacheFilter` protocol, GRMustache will return an error of domain `GRMustacheErrorDomain` and code `GRMustacheErrorCodeRenderingError`.
 
 The message describes the exact place where the error occur has occurred:
 
@@ -205,7 +196,7 @@ Instead, have a look at tag delegates, especially the [Tag Delegates as Cross-Pl
 Sample code
 -----------
 
-Custom filters are used by the [Formatted Numbers](sample_code/number_formatting.md) and [Collection Indexes](sample_code/indexes.md) sample codes. Go check inspiration there.
+Custom filters are used in the [Collection Indexes](sample_code/indexes.md) sample code, and in many items of the [standard library](standard_library.md). [NSFormatter](NSFormatter.md) are ready-made filters in GRMustache. Go check inspiration there.
 
 
-[up](../../../../GRMustache#documentation), [next](delegate.md)
+[up](../../../../GRMustache#documentation), [next](rendering_objects.md)

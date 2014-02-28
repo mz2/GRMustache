@@ -1,6 +1,6 @@
 // The MIT License
 // 
-// Copyright (c) 2012 Gwendal Roué
+// Copyright (c) 2014 Gwendal Roué
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,6 @@
 // THE SOFTWARE.
 
 #import "GRMustachePublicAPITest.h"
-#import "JSONKit.h"
 
 static struct {
     NSString *tests;
@@ -36,6 +35,7 @@ static struct {
     NSString *encoding;
     NSString *data;
     NSString *expected;
+    NSString *expected_error;
 } GRMustachePublicAPITestItemKeys = {
     .partials = @"partials",
     .template = @"template",
@@ -43,6 +43,7 @@ static struct {
     .encoding = @"encoding",
     .data = @"data",
     .expected = @"expected",
+    .expected_error = @"expected_error",
 };
 
 
@@ -60,9 +61,12 @@ static struct {
     STAssertNotNil(testSuiteData, @"Could not load test suite at %@", path);
     if (!testSuiteData) return;
     
-    NSDictionary *testSuite = [testSuiteData objectFromJSONDataWithParseOptions:JKParseOptionComments error:&error];
+    NSDictionary *testSuite = [self JSONObjectWithData:testSuiteData error:&error];
     STAssertNotNil(testSuite, @"Could not load test suite at %@: %@", path, error);
-    if (!testSuite) return;
+    if (!testSuite) {
+        // Allow breakpoint for failing tests
+        return;
+    }
     
     NSArray *tests = [testSuite objectForKey:GRMustacheTestSuiteKeys.tests];
     STAssertTrue((tests.count > 0), @"Empty test suite at %@", path);
@@ -78,7 +82,9 @@ static struct {
         NSString *templateString = [testDictionary objectForKey:GRMustachePublicAPITestItemKeys.template];
         NSString *templateName = [testDictionary objectForKey:GRMustachePublicAPITestItemKeys.template_name];
         NSString *expectedRendering = [testDictionary objectForKey:GRMustachePublicAPITestItemKeys.expected];
+        NSString *expectedError = [testDictionary objectForKey:GRMustachePublicAPITestItemKeys.expected_error];
         NSDictionary *templatesDictionary = [testDictionary objectForKey:GRMustachePublicAPITestItemKeys.partials];
+        NSRegularExpression *expectedErrorReg = nil;
         
         
         // data is mandatory
@@ -87,10 +93,42 @@ static struct {
         if (!(data != nil)) continue;
         
         
-        // expected rendering must be a string
+        // expected rendering, if present, must be a string
         
-        STAssertTrue([expectedRendering isKindOfClass:[NSString class]], @"`%@` key is not a string in %@", GRMustachePublicAPITestItemKeys.expected, testDescription);
-        if (![expectedRendering isKindOfClass:[NSString class]]) continue;
+        if (expectedRendering) {
+            STAssertTrue([expectedRendering isKindOfClass:[NSString class]], @"`%@` key is not a string in %@", GRMustachePublicAPITestItemKeys.expected, testDescription);
+            if (![expectedRendering isKindOfClass:[NSString class]]) continue;
+        }
+        
+        
+        // expected error, if present, must be a string
+        
+        if (expectedError) {
+            STAssertTrue([expectedError isKindOfClass:[NSString class]], @"`%@` key is not a string in %@", GRMustachePublicAPITestItemKeys.expected_error, testDescription);
+            if (![expectedError isKindOfClass:[NSString class]]) continue;
+        }
+        
+        
+        // expected error, if present, must be a regular expression pattern
+        
+        if (expectedError) {
+            NSError *error;
+            expectedErrorReg = [NSRegularExpression regularExpressionWithPattern:expectedError options:0 error:&error];
+            STAssertNotNil(expectedErrorReg, @"`%@` key is not a regular expression pattern in %@ (%@)", GRMustachePublicAPITestItemKeys.expected_error, testDescription, error.localizedDescription);
+            if (!expectedErrorReg) continue;
+        }
+        
+        
+        // we need expected rendering, or expected error
+        
+        STAssertTrue(!((expectedRendering == nil) && (expectedErrorReg == nil)), @"Missing both `%@` and `%@` keys in %@", GRMustachePublicAPITestItemKeys.expected, GRMustachePublicAPITestItemKeys.expected_error, testDescription);
+        if (((expectedRendering == nil) && (expectedErrorReg == nil))) continue;
+        
+        
+        // we need expected rendering, or expected error, but not both
+        
+        STAssertTrue(!((expectedRendering != nil) && (expectedErrorReg != nil)), @"Can't have both `%@` and `%@` keys in %@", GRMustachePublicAPITestItemKeys.expected, GRMustachePublicAPITestItemKeys.expected_error, testDescription);
+        if (((expectedRendering != nil) && (expectedErrorReg != nil))) continue;
         
         
         // template string, if present, must be a string
@@ -154,57 +192,31 @@ static struct {
                 // run tests with NSString path
                 
                 {
-                    NSError *error;
-                    GRMustacheTemplate *template = [self templateForTemplateNamed:templateName
-                                                                    templatesPath:templatesPath
-                                                                         encoding:encoding
-                                                                            error:&error];
-                    
-                    if (template) {
-                        NSString *rendering = [template renderObject:data error:&error];
-                        if (rendering) {
-                            if (![expectedRendering isEqualToString:rendering]) {
-                                // Allow Breakpointing failing tests
-                                [template renderObject:data error:&error];
-                            }
-                            
-                            STAssertEqualObjects(rendering, expectedRendering, @"Failed test: %@", testDescription);
-                        } else {
-                            // Allow Breakpointing failing tests
-                            [template renderObject:data error:&error];
-                            STAssertTrue(NO, @"Error rendering template: %@: %@", [error localizedDescription], testDescription);
-                        }
-                    } else {
-                        STAssertTrue(NO, @"Error loading template: %@: %@", [error localizedDescription], testDescription);
-                    }
+                    [self checkExpectedRendering:expectedRendering
+                                expectedErrorReg:expectedErrorReg
+                             fromTestDescription:testDescription
+                           againstRenderedObject:data
+                                        template:^(GRMustacheTemplate **template, NSError **error) {
+                                            *template = [self templateForTemplateNamed:templateName
+                                                                         templatesPath:templatesPath
+                                                                              encoding:encoding
+                                                                                 error:error];
+                                        }];
                 }
                 
                 // run tests with NSURL path
                 
                 {
-                    NSError *error;
-                    GRMustacheTemplate *template = [self templateForTemplateNamed:templateName
-                                                                     templatesURL:[NSURL fileURLWithPath:templatesPath]
-                                                                         encoding:encoding
-                                                                            error:&error];
-                    
-                    if (template) {
-                        NSString *rendering = [template renderObject:data error:&error];
-                        if (rendering) {
-                            if (![expectedRendering isEqualToString:rendering]) {
-                                // Allow Breakpointing failing tests
-                                [template renderObject:data error:&error];
-                            }
-                            
-                            STAssertEqualObjects(rendering, expectedRendering, @"Failed test: %@", testDescription);
-                        } else {
-                            // Allow Breakpointing failing tests
-                            [template renderObject:data error:&error];
-                            STAssertTrue(NO, @"Error rendering template: %@: %@", [error localizedDescription], testDescription);
-                        }
-                    } else {
-                        STAssertTrue(NO, @"Error loading template: %@: %@", [error localizedDescription], testDescription);
-                    }
+                    [self checkExpectedRendering:expectedRendering
+                                expectedErrorReg:expectedErrorReg
+                             fromTestDescription:testDescription
+                           againstRenderedObject:data
+                                        template:^(GRMustacheTemplate **template, NSError **error) {
+                                            *template = [self templateForTemplateNamed:templateName
+                                                                          templatesURL:[NSURL fileURLWithPath:templatesPath]
+                                                                              encoding:encoding
+                                                                                 error:error];
+                                        }];
                 }
                 
                 
@@ -217,31 +229,15 @@ static struct {
             
             // run tests from memory
             
-            NSError *error;
-            GRMustacheTemplate *template = [self templateForTemplateString:templateString
-                                                        partialsDictionary:templatesDictionary
-                                                                     error:&error];
-            
-            if (template) {
-                NSString *rendering = [template renderObject:data error:&error];
-                if (rendering) {
-                    if (![expectedRendering isEqualToString:rendering]) {
-                        // Allow Breakpointing failing tests
-                        [template renderObject:data error:&error];
-                    }
-                    STAssertEqualObjects(rendering, expectedRendering, @"Failed test: %@", testDescription);
-                } else {
-                    // Allow Breakpointing failing tests
-                    [template renderObject:data error:&error];
-                    STAssertTrue(NO, @"Error rendering template: %@: %@", [error localizedDescription], testDescription);
-                }
-            } else {
-                // Allow Breakpointing failing tests
-                template = [self templateForTemplateString:templateString
-                                        partialsDictionary:templatesDictionary
-                                                     error:&error];
-                STAssertTrue(NO, @"Error loading template: %@: %@", [error localizedDescription], testDescription);
-            }
+            [self checkExpectedRendering:expectedRendering
+                        expectedErrorReg:expectedErrorReg
+                     fromTestDescription:testDescription
+                   againstRenderedObject:data
+                                template:^(GRMustacheTemplate **template, NSError **error) {
+                                    *template = [self templateForTemplateString:templateString
+                                                             partialsDictionary:templatesDictionary
+                                                                          error:error];
+                                }];
         }
     }
 }
@@ -266,6 +262,75 @@ static struct {
                                                                                          templateExtension:[templateName pathExtension]
                                                                                                   encoding:encoding];
     return [repository templateNamed:[templateName stringByDeletingPathExtension] error:error];
+}
+
+- (void)checkExpectedRendering:(NSString *)expectedRendering expectedErrorReg:(NSRegularExpression *)expectedErrorReg fromTestDescription:(NSString *)testDescription againstRenderedObject:(id)object template:(void(^)(GRMustacheTemplate **template, NSError **error))block
+{
+    NSError *error;
+    GRMustacheTemplate *template;
+    
+    block(&template, &error);
+    
+    if (template) {
+        NSString *rendering = [template renderObject:object error:&error];
+        if (rendering) {
+            if (expectedRendering) {
+                // compare rendering to expected rendering
+                
+                if (![expectedRendering isEqualToString:rendering]) {
+                    // Allow breakpoint for failing tests
+                    [template renderObject:object error:&error];
+                }
+                
+                STAssertEqualObjects(rendering, expectedRendering, @"Unexpected rendering: %@", testDescription);
+            } else {
+                // error was expected
+                
+                // Allow breakpoint for failing tests
+                [template renderObject:object error:&error];
+                
+                STAssertTrue(NO, @"Unexpected rendering: %@: %@", rendering, testDescription);
+            }
+        } else {
+            if (expectedErrorReg) {
+                __block BOOL match = NO;
+                [expectedErrorReg enumerateMatchesInString:error.localizedDescription options:0 range:NSMakeRange(0, error.localizedDescription.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+                    match = YES;
+                    *stop = YES;
+                }];
+                if (!match) {
+                    // Allow breakpoint for failing tests
+                    [template renderObject:object error:&error];
+                    
+                    STAssertTrue(NO, @"Unexpected error: %@: %@", error.localizedDescription, testDescription);
+                }
+            } else {
+                // Allow breakpoint for failing tests
+                [template renderObject:object error:&error];
+                
+                STAssertTrue(NO, @"Unexpected error: %@: %@", error.localizedDescription, testDescription);
+            }
+        }
+    } else {
+        if (expectedErrorReg) {
+            __block BOOL match = NO;
+            [expectedErrorReg enumerateMatchesInString:error.localizedDescription options:0 range:NSMakeRange(0, error.localizedDescription.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+                match = YES;
+                *stop = YES;
+            }];
+            if (!match) {
+                // Allow breakpoint for failing tests
+                block(&template, &error);
+                
+                STAssertTrue(NO, @"Unexpected error: %@: %@", error.localizedDescription, testDescription);
+            }
+        } else {
+            // Allow breakpoint for failing tests
+            block(&template, &error);
+            
+            STAssertTrue(NO, @"Error loading template: %@: %@", error.localizedDescription, testDescription);
+        }
+    }
 }
 
 @end
