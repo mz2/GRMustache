@@ -1,6 +1,6 @@
 // The MIT License
 // 
-// Copyright (c) 2012 Gwendal Roué
+// Copyright (c) 2014 Gwendal Roué
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,6 @@
 @private
     NSString *_templateString;
     NSRange _innerRange;
-    GRMustacheTagType _type;
     NSArray *_components;
 }
 
@@ -52,14 +51,15 @@
  * The _components_ array contains the GRMustacheTemplateComponent objects
  * that make the section (texts, variables, other sections, etc.)
  * 
+ * @param type                The type of the section.
  * @param templateRepository  The template repository that did provide the
  *                            template string.
  * @param expression          The expression that would evaluate against a
  *                            rendering context.
- * @param templateString      A Mustache template string
+ * @param contentType         The content type of the tag rendering.
+ * @param templateString      A Mustache template string.
  * @param innerRange          The range of the inner template string of the
  *                            section in _templateString_.
- * @param type                The type of the section.
  * @param components          An array of GRMustacheTemplateComponent that make
  *                            the section.
  *
@@ -69,6 +69,6 @@
  * @see GRMustacheContext
  * @see GRMustacheContext
  */
-+ (id)sectionTagWithTemplateRepository:(GRMustacheTemplateRepository *)templateRepository expression:(GRMustacheExpression *)expression templateString:(NSString *)templateString innerRange:(NSRange)innerRange type:(GRMustacheTagType)type components:(NSArray *)components GRMUSTACHE_API_INTERNAL;
++ (instancetype)sectionTagWithType:(GRMustacheTagType)type templateRepository:(GRMustacheTemplateRepository *)templateRepository expression:(GRMustacheExpression *)expression contentType:(GRMustacheContentType)contentType templateString:(NSString *)templateString innerRange:(NSRange)innerRange components:(NSArray *)components GRMUSTACHE_API_INTERNAL;
 
 @end

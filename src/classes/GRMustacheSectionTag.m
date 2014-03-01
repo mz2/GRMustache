@@ -1,6 +1,6 @@
 // The MIT License
 // 
-// Copyright (c) 2012 Gwendal Roué
+// Copyright (c) 2014 Gwendal Roué
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,29 +21,22 @@
 // THE SOFTWARE.
 
 #import "GRMustacheSectionTag_private.h"
-#import "GRMustacheExpression_private.h"
-#import "GRMustacheTemplateComponent_private.h"
-#import "GRMustacheTemplate_private.h"
 #import "GRMustacheAccumulatorTag_private.h"
-#import "GRMustacheTagDelegate.h"
-#import "GRMustacheContext_private.h"
-#import "GRMustacheRendering.h"
-#import "GRMustache_private.h"
 
 @interface GRMustacheSectionTag()
 
 /**
  * @see +[GRMustacheSectionTag sectionTagWithExpression:templateString:innerRange:inverted:overridable:components:]
  */
-- (id)initWithTemplateRepository:(GRMustacheTemplateRepository *)templateRepository expression:(GRMustacheExpression *)expression templateString:(NSString *)templateString innerRange:(NSRange)innerRange type:(GRMustacheTagType)type components:(NSArray *)components;
+- (id)initWithType:(GRMustacheTagType)type templateRepository:(GRMustacheTemplateRepository *)templateRepository expression:(GRMustacheExpression *)expression contentType:(GRMustacheContentType)contentType templateString:(NSString *)templateString innerRange:(NSRange)innerRange components:(NSArray *)components;
 @end
 
 
 @implementation GRMustacheSectionTag
 
-+ (id)sectionTagWithTemplateRepository:(GRMustacheTemplateRepository *)templateRepository expression:(GRMustacheExpression *)expression templateString:(NSString *)templateString innerRange:(NSRange)innerRange type:(GRMustacheTagType)type components:(NSArray *)components
++ (instancetype)sectionTagWithType:(GRMustacheTagType)type templateRepository:(GRMustacheTemplateRepository *)templateRepository expression:(GRMustacheExpression *)expression contentType:(GRMustacheContentType)contentType templateString:(NSString *)templateString innerRange:(NSRange)innerRange components:(NSArray *)components
 {
-    return [[[self alloc] initWithTemplateRepository:templateRepository expression:expression templateString:templateString innerRange:innerRange type:type components:components] autorelease];
+    return [[[self alloc] initWithType:type templateRepository:templateRepository expression:expression contentType:contentType templateString:templateString innerRange:innerRange components:components] autorelease];
 }
 
 - (void)dealloc
@@ -56,24 +49,29 @@
 
 #pragma mark - GRMustacheTag
 
-@synthesize type=_type;
-
 - (NSString *)renderContentWithContext:(GRMustacheContext *)context HTMLSafe:(BOOL *)HTMLSafe error:(NSError **)error
 {
+    if (!context) {
+        // With a nil context, the method would return nil without setting the
+        // error argument.
+        [NSException raise:NSInvalidArgumentException format:@"Invalid context:nil"];
+        return NO;
+    }
+    
     NSMutableString *buffer = [NSMutableString string];
     
     for (id<GRMustacheTemplateComponent> component in _components) {
-        // component may be overriden by a GRMustacheTemplateOverride: resolve it.
+        // component may be overriden by a GRMustachePartialOverride: resolve it.
         component = [context resolveTemplateComponent:component];
         
         // render
-        if (![component renderInBuffer:buffer withContext:context error:error]) {
+        if (![component renderContentType:_contentType inBuffer:buffer withContext:context error:error]) {
             return nil;
         }
     }
     
     if (HTMLSafe) {
-        *HTMLSafe = YES;
+        *HTMLSafe = (_contentType == GRMustacheContentTypeHTML);
     }
     return buffer;
 }
@@ -120,13 +118,12 @@
 
 #pragma mark - Private
 
-- (id)initWithTemplateRepository:(GRMustacheTemplateRepository *)templateRepository expression:(GRMustacheExpression *)expression templateString:(NSString *)templateString innerRange:(NSRange)innerRange type:(GRMustacheTagType)type components:(NSArray *)components
+- (id)initWithType:(GRMustacheTagType)type templateRepository:(GRMustacheTemplateRepository *)templateRepository expression:(GRMustacheExpression *)expression contentType:(GRMustacheContentType)contentType templateString:(NSString *)templateString innerRange:(NSRange)innerRange components:(NSArray *)components
 {
-    self = [super initWithTemplateRepository:templateRepository expression:expression];
+    self = [super initWithType:type templateRepository:templateRepository expression:expression contentType:contentType];
     if (self) {
         _templateString = [templateString retain];
         _innerRange = innerRange;
-        _type = type;
         _components = [components retain];
     }
     return self;

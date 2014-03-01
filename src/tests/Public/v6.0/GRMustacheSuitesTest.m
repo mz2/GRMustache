@@ -1,6 +1,6 @@
 // The MIT License
 // 
-// Copyright (c) 2012 Gwendal Roué
+// Copyright (c) 2014 Gwendal Roué
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@
     [self runTestsFromResource:@"compound_keys.json" subdirectory:@"GRMustacheSuites"];
     [self runTestsFromResource:@"delimiters.json" subdirectory:@"GRMustacheSuites"];
     [self runTestsFromResource:@"filters.json" subdirectory:@"GRMustacheSuites"];
-    [self runTestsFromResource:@"filter_library.json" subdirectory:@"GRMustacheSuites"];
+    [self runTestsFromResource:@"standard_library.json" subdirectory:@"GRMustacheSuites"];
     [self runTestsFromResource:@"general.json" subdirectory:@"GRMustacheSuites"];
     [self runTestsFromResource:@"implicit_iterator.json" subdirectory:@"GRMustacheSuites"];
     [self runTestsFromResource:@"inverted_sections.json" subdirectory:@"GRMustacheSuites"];
@@ -44,6 +44,9 @@
     [self runTestsFromResource:@"sections.json" subdirectory:@"GRMustacheSuites"];
     [self runTestsFromResource:@"variables.json" subdirectory:@"GRMustacheSuites"];
     [self runTestsFromResource:@"pragmas.json" subdirectory:@"GRMustacheSuites"];
+    [self runTestsFromResource:@"text_rendering.json" subdirectory:@"GRMustacheSuites"];
+    [self runTestsFromResource:@"tag_parsing_errors.json" subdirectory:@"GRMustacheSuites"];
+    [self runTestsFromResource:@"expression_parsing_errors.json" subdirectory:@"GRMustacheSuites"];
 }
 
 @end

@@ -1,6 +1,6 @@
 // The MIT License
 //
-// Copyright (c) 2012 Gwendal Roué
+// Copyright (c) 2014 Gwendal Roué
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -45,9 +45,15 @@
     }
     
     {
-        // [NSArray count] should be accessible
+        // [NSArray count] should be accessible (test for method returning a scalar)
         NSString *rendering = [[GRMustacheTemplate templateFromString:@"{{collection.count}}" error:NULL] renderObject:data error:NULL];
         STAssertEqualObjects(rendering, @"1", @"");
+    }
+    
+    {
+        // [NSArray lastObject] should be accessible (test for method returning an object)
+        NSString *rendering = [[GRMustacheTemplate templateFromString:@"{{collection.lastObject.key}}" error:NULL] renderObject:data error:NULL];
+        STAssertEqualObjects(rendering, @"value", @"");
     }
 }
 
@@ -68,9 +74,15 @@
     }
     
     {
-        // [NSSet count] should be accessible
+        // [NSSet count] should be accessible (test for method returning a scalar)
         NSString *rendering = [[GRMustacheTemplate templateFromString:@"{{collection.count}}" error:NULL] renderObject:data error:NULL];
         STAssertEqualObjects(rendering, @"1", @"");
+    }
+    
+    {
+        // [NSSet anyObject] should be accessible (test for method returning an object)
+        NSString *rendering = [[GRMustacheTemplate templateFromString:@"{{collection.anyObject.key}}" error:NULL] renderObject:data error:NULL];
+        STAssertEqualObjects(rendering, @"value", @"");
     }
 }
 
@@ -91,9 +103,15 @@
     }
     
     {
-        // [NSOrderedSet count] should be accessible
+        // [NSOrderedSet count] should be accessible (test for method returning a scalar)
         NSString *rendering = [[GRMustacheTemplate templateFromString:@"{{collection.count}}" error:NULL] renderObject:data error:NULL];
         STAssertEqualObjects(rendering, @"1", @"");
+    }
+    
+    {
+        // [NSOrderedSet firstObject] should be accessible (test for method returning an object)
+        NSString *rendering = [[GRMustacheTemplate templateFromString:@"{{collection.firstObject.key}}" error:NULL] renderObject:data error:NULL];
+        STAssertEqualObjects(rendering, @"value", @"");
     }
 }
 

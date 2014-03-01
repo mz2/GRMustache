@@ -1,6 +1,6 @@
 // The MIT License
 // 
-// Copyright (c) 2012 Gwendal Roué
+// Copyright (c) 2014 Gwendal Roué
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@
  * The GRMustacheExpression is the base class for objects that can provide
  * values out of a Mustache rendering context.
  *
- * GRMustacheExpression instances are built by GRMustacheParser. For instance,
+ * GRMustacheExpression instances are built by GRMustacheParser. For example,
  * the `{{ name }}` tag would yield a GRMustacheIdentifierExpression.
  *
  * @see GRMustacheFilteredExpression
@@ -51,21 +51,28 @@
 @property (nonatomic, retain) GRMustacheToken *token GRMUSTACHE_API_INTERNAL;
 
 /**
- * Evaluates an expression against a rendering context, and return the value.
+ * Evaluates an expression against a rendering context.
  *
+ * @param value      Upon return contains the value of the expression
  * @param context    A Mustache rendering context
- * @param protected  TODO
+ * @param protected  Upon return contains YES if the computed value comes from
+ *                   the protected stack of the context, NO otherwise.
+ * @param error      If there is an error computing the value, upon return
+ *                   contains an NSError object that describes the problem.
  *
- * @return TODO
+ * @return YES if the value could be computed
+ *
+ * @see GRMustacheContext
  */
-- (id)valueWithContext:(GRMustacheContext *)context protected:(BOOL *)protected GRMUSTACHE_API_INTERNAL;
+- (BOOL)hasValue:(id *)value withContext:(GRMustacheContext *)context protected:(BOOL *)protected error:(NSError **)error GRMUSTACHE_API_INTERNAL;
 
 /**
  * Returns a Boolean value that indicates whether the receiver and a given
  * object are equal.
  *
- * Expressions are equal if and only if the result of their `valueWithContext:`
- * implementation would return the same value in a given rendering context.
+ * Expressions are equal if and only if the result of their
+ * `hasValue:withContext:protected:error:` implementation would return the same
+ * value in a given rendering context.
  *
  * Default implementation is NSObject's one: subclasses must override.
  *

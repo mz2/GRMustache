@@ -3,6 +3,180 @@ GRMustache Release Notes
 
 You can compare the performances of GRMustache versions at https://github.com/groue/GRMustacheBenchmark.
 
+## v6.9.2
+
+[Fix](https://github.com/groue/GRMustache/pull/70) for a crash on arm64 devices.
+
+
+## v6.9.1
+
+[Fix](https://github.com/groue/GRMustache/pull/67) for a crash in enumeration rendering.
+
+
+## v6.9.0
+
+GRMustache now supports [keyed subscripting](http://clang.llvm.org/docs/ObjectiveCLiterals.html#dictionary-style-subscripting): the `objectForKeyedSubscript:` method is preferred to the classic Key-Value-Coding `valueForKey:` method, when extracting values from your view models.
+
+This change fixes the issue [#66](https://github.com/groue/GRMustache/issues/66).
+
+
+## v6.8.4
+
+Thread-safety of non-mutating methods is guaranteed.
+
+
+## v6.8.3
+
+The static library lib/libGRMustache6-iOS.a now includes slices for both x86_64 and arm64 architectures.
+
+
+## v6.8.2
+
+Fix design bugs introduced by v6.8.1. `HTML.escape`, `javascript.escape` and `URL.escape` are no longer able to escape the rendering of your custom rendering objects: they must be given plain strings.
+
+
+## v6.8.1
+
+Bug fixes:
+
+- `HTML.escape`, `javascript.escape` and `URL.escape` are now able to escape the rendering of your custom rendering objects.
+
+
+## v6.8
+
+This version introduces a few convenience APIs, and deprecates a flawed method.
+
+### New APIs:
+
+```objc
+@interface GRMustacheTemplate
+- (void)extendBaseContextWithObject:(id)object;
+- (void)extendBaseContextWithProtectedObject:(id)object;
+- (void)extendBaseContextWithTagDelegate:(id<GRMustacheTagDelegate>)tagDelegate;
+@end
+
+@interface GRMustacheConfiguration
+- (void)extendBaseContextWithObject:(id)object;
+- (void)extendBaseContextWithProtectedObject:(id)object;
+- (void)extendBaseContextWithTagDelegate:(id<GRMustacheTagDelegate>)tagDelegate;
+@end
+
+@interface GRMustacheContext
+- (BOOL)hasValue:(id *)value forMustacheExpression:(NSString *)expression error:(NSError **)error;
+@end
+```
+
+Full documentation of the new APIs: [GRMustacheTemplate](http://groue.github.io/GRMustache/Reference/Classes/GRMustacheTemplate.html), [GRMustacheConfiguration](http://groue.github.io/GRMustache/Reference/Classes/GRMustacheConfiguration.html) and [GRMustacheContext](http://groue.github.io/GRMustache/Reference/Classes/GRMustacheContext.html).
+
+### Deprecated APIs:
+
+```objc
+@interface GRMustacheContext
+// Use the new hasValue:forMustacheExpression:error: method instead
+- (id)valueForMustacheExpression:(NSString *)expression error:(NSError **)error;
+@end
+```
+
+## v6.7.5
+
+Fix for issue [#56](https://github.com/groue/GRMustache/issues/56) (nil template strings have GRMustache return an error instead of crashing).
+
+## v6.7.4
+
+Bug fixes:
+
+- NSUndefinedKeyException prevention used not to work under a Garbage Collector-enabled OSX application.
+- Some custom setters of GRMustacheContext managed properties could prevent proper management of those properties.
+
+## v6.7.3
+
+More performance improvements.
+
+## v6.7.2
+
+Fix [issue #38](https://github.com/groue/GRMustache/issues/38).
+
+## v6.7.1
+
+Bug fixes regarding GRMustacheContext.
+
+## v6.7
+
+### Performance improvements
+
+Many thanks to [Alex Reid](https://github.com/AlexJReid) who could setup benchmarks revealing performance problems.
+
+### More ViewModel
+
+- `-[GRMustacheContext topMustacheObject]` gives you access to the top of the rendering stack
+- `-[GRMustacheContext valueForUndefinedMustacheKey:]` let your subclasses define default values for any key.
+
+Check the [ViewModel Guide](Guides/view_model.md) for more information.
+
+## v6.6
+
+`-[GRMustacheContext valueForMustacheKey:]` allows your ViewModels to dig in the [context stack](Guides/runtime.md#the-context-stack).
+
+`-[GRMustacheContext valueForMustacheExpression:error:]` allows your ViewModels to perform the same computations as Mustache tags, such as `{{ uppercase(user.name) }}`.
+
+Check the [ViewModel Guide](Guides/view_model.md) for more information.
+
+## v6.5.1
+
+Robustness of ViewModel classes.
+
+## v6.5
+
+### ViewModel classes
+
+ViewModel classes are havens for your template-specific keys. To be discovered in the [ViewModel Guide](Guides/view_model.md).
+
+
+## v6.4.1
+
+Bugfixes:
+
+- Avoid leaked memory warnings (thanks [@oleganza](https://github.com/oleganza)).
+- The `localize` helper now lets you localize sections whose content contains `%@`.
+
+## v6.4.0
+
+### Integration in your Xcode project
+
+The GRMustache static libraries now require that you add the `-ObjC` option in the "Other Linker Flags" of your targets ([how to](http://developer.apple.com/library/mac/#qa/qa1490/_index.html)).
+
+### Configuration
+
+The [GRMustacheConfiguration](Guides/configuration.md) class now lets you specify a base rendering context, and the Mustache tag delimiters.
+
+### Standard Library
+
+The [standard library](Guides/standard_library.md) sports new services. Localization support is now built-in, as well as various escaping tools.
+
+### NSFormatter
+
+NSFormatter and subclasses such as NSDateFormatter and NSNumberFormatter are now first citizen of GRMustache. Check the [NSFormatter Guide](Guides/NSFormatter.md).
+
+
+## v6.3.0
+
+GRMustache does no longer raise an exception when a template can't evaluate a filter expression such as `{{ f(x) }}`.
+
+Instead, an error is returned, with new GRMustache error code `GRMustacheErrorCodeRenderingError`.
+
+
+## v6.2.0
+
+**Text templates**
+
+Text templates render text, and do not HTML-escape their input.
+
+Check the [HTML vs. Text Templates Guide](Guides/html_vs_text.md).
+
+## v6.1.4
+
+Garbage collection support.
+
 ## v6.1.3
 
 The parser now rejects expressions identifiers that start with a reserved Mustache character: `{}<>&#^$/` (those are the characters that start Mustache tags).
@@ -387,7 +561,7 @@ Section delegates are used in the [number formatting sample code](Guides/sample_
 
 Headers contain documentation for every exposed API.
 
-An online reference, automatically generated from inline documentation by appledoc can be read at http://groue.github.com/GRMustache/Reference/.
+An online reference, automatically generated from inline documentation by appledoc can be read at http://groue.github.io/GRMustache/Reference/.
 
 ## v4.1.0
 

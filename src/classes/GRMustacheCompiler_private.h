@@ -1,17 +1,17 @@
 // The MIT License
-// 
-// Copyright (c) 2012 Gwendal Roué
-// 
+//
+// Copyright (c) 2014 Gwendal Roué
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,20 +23,18 @@
 #import <Foundation/Foundation.h>
 #import "GRMustacheAvailabilityMacros_private.h"
 #import "GRMustacheParser_private.h"
-#import "GRMustache_private.h"
+#import "GRMustacheContentType.h"
 
-
-@class GRMustacheCompiler;
+@class GRMustacheConfiguration;
 @class GRMustacheTemplateRepository;
-@protocol GRMustacheTemplateComponent;
-
+@class GRMustacheAST;
 
 /**
  * The GRMustacheCompiler interprets GRMustacheTokens provided by a
  * GRMustacheParser, and outputs a syntax tree of objects conforming to the
  * GRMustacheTemplateComponent protocol, the template components that make a
  * Mustache template.
- * 
+ *
  * @see GRMustacheTemplateComponent
  * @see GRMustacheToken
  * @see GRMustacheParser
@@ -44,11 +42,20 @@
 @interface GRMustacheCompiler : NSObject<GRMustacheParserDelegate> {
 @private
     NSError *_fatalError;
-    NSMutableArray *_componentsStack;
-    NSMutableArray *_openingTokenStack;
+    
     NSMutableArray *_currentComponents;
+    NSMutableArray *_componentsStack;
+    
     GRMustacheToken *_currentOpeningToken;
+    NSMutableArray *_openingTokenStack;
+    
+    NSObject *_currentTagValue;
+    NSMutableArray *_tagValueStack;
+    
     GRMustacheTemplateRepository *_templateRepository;
+    id _baseTemplateID;
+    GRMustacheContentType _contentType;
+    BOOL _contentTypeLocked;
 }
 
 /**
@@ -57,39 +64,52 @@
 @property (nonatomic, assign) GRMustacheTemplateRepository *templateRepository GRMUSTACHE_API_INTERNAL;
 
 /**
- * Returns an NSArray of objects conforming to the GRMustacheTemplateComponent
- * protocol.
- * 
- * The array will contain something if a GRMustacheParser has provided
+ * ID of the currently compiled template
+ */
+@property (nonatomic, retain) id baseTemplateID GRMUSTACHE_API_INTERNAL;
+
+/**
+ * Returns an initialized compiler.
+ *
+ * @param configuration  The GRMustacheConfiguration that affects the
+ *                       compilation phase.
+ * @return a compiler
+ */
+- (id)initWithConfiguration:(GRMustacheConfiguration *)configuration GRMUSTACHE_API_INTERNAL;
+
+/**
+ * Returns a Mustache Abstract Syntax Tree.
+ *
+ * The AST will contain something if a GRMustacheParser has provided
  * GRMustacheToken instances to the compiler.
- * 
- * For instance:
- * 
+ *
+ * For example:
+ *
  *     // Create a Mustache compiler
- *     GRMustacheCompiler *compiler = [[[GRMustacheCompiler alloc] init] autorelease];
- *     
+ *     GRMustacheCompiler *compiler = [[[GRMustacheCompiler alloc] initWithConfiguration:...] autorelease];
+ *
  *     // Some GRMustacheCompilerDataSource tells the compiler where are the
  *     // partials.
  *     compiler.dataSource = ...;
- *     
+ *
  *     // Create a Mustache parser
- *     GRMustacheParser *parser = [[[GRMustacheParser alloc] init] autorelease];
- *     
+ *     GRMustacheParser *parser = [[[GRMustacheParser alloc] initWithConfiguration:...] autorelease];
+ *
  *     // The parser feeds the compiler
  *     parser.delegate = compiler;
- *     
+ *
  *     // Parse some string
  *     [parser parseTemplateString:... templateID:...];
- *     
+ *
  *     // Extract template components from the compiler
- *     NSArray *templateComponents = [compiler templateComponentsReturningError:...];
+ *     GRMustacheAST *AST = [compiler ASTReturningError:...];
  *
- * @param error  If there is an error building template components, upon return
- *               contains an NSError object that describes the problem.
+ * @param error  If there is an error building the abstract syntax tree, upon
+ *               return contains an NSError object that describes the problem.
  *
- * @return An NSArray containing <GRMustacheTemplateComponent> instances
- * 
- * @see GRMustacheTemplateComponent
+ * @return A GRMustacheAST instance
+ *
+ * @see GRMustacheAST
  */
-- (NSArray *)templateComponentsReturningError:(NSError **)error GRMUSTACHE_API_INTERNAL;
+- (GRMustacheAST *)ASTReturningError:(NSError **)error GRMUSTACHE_API_INTERNAL;
 @end

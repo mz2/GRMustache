@@ -1,6 +1,6 @@
 // The MIT License
 // 
-// Copyright (c) 2012 Gwendal Roué
+// Copyright (c) 2014 Gwendal Roué
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@
 
 @implementation GRMustacheImplicitIteratorExpression
 
-+ (id)expression
++ (instancetype)expression
 {
     return [[[self alloc] init] autorelease];
 }
@@ -38,12 +38,15 @@
 
 #pragma mark - GRMustacheExpression
 
-- (id)valueWithContext:(GRMustacheContext *)context protected:(BOOL *)protected
+- (BOOL)hasValue:(id *)value withContext:(GRMustacheContext *)context protected:(BOOL *)protected error:(NSError **)error
 {
     if (protected != NULL) {
         *protected = NO;
     }
-    return [context currentContextValue];
+    if (value != NULL) {
+        *value = [context topMustacheObject];
+    }
+    return YES;
 }
 
 @end

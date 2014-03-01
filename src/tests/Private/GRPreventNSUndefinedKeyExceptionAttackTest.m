@@ -1,6 +1,6 @@
 // The MIT License
 // 
-// Copyright (c) 2012 Gwendal Roué
+// Copyright (c) 2014 Gwendal Roué
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 #import "GRMustachePrivateAPITest.h"
 #import "GRMustache_private.h"
 #import "GRMustacheTemplate_private.h"
-#import "GRMustacheContext_private.h"
+#import "GRMustacheKeyAccess_private.h"
 #import <CoreData/CoreData.h>
 
 @interface GRPreventNSUndefinedKeyExceptionAttackTest : GRMustachePrivateAPITest {
@@ -65,24 +65,24 @@
     
     GRMustacheTemplate *template = [GRMustacheTemplate templateFromString:@"foo:{{foo}}" error:nil];
     {
-        GRMustacheContextDidCatchNSUndefinedKeyException = NO;
+        GRMustacheKeyAccessDidCatchNSUndefinedKeyException = NO;
         id object = [[[NSObject alloc] init] autorelease];
         [template renderObject:object error:NULL];
         
         // make sure object did not raise any exception
-        STAssertEquals(NO, GRMustacheContextDidCatchNSUndefinedKeyException, @"");
+        STAssertEquals(NO, GRMustacheKeyAccessDidCatchNSUndefinedKeyException, @"");
         
         // make sure object raises exception again
         STAssertThrowsSpecificNamed([object valueForKey:@"foo"], NSException, NSUndefinedKeyException, nil);
     }
     
     {
-        GRMustacheContextDidCatchNSUndefinedKeyException = NO;
+        GRMustacheKeyAccessDidCatchNSUndefinedKeyException = NO;
         NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"NSManagedObject" inManagedObjectContext:self.managedObjectContext];
         [template renderObject:managedObject error:NULL];
         
         // make sure object did not raise any exception
-        STAssertEquals(NO, GRMustacheContextDidCatchNSUndefinedKeyException, @"");
+        STAssertEquals(NO, GRMustacheKeyAccessDidCatchNSUndefinedKeyException, @"");
         
         // make sure object raises exception again
         STAssertThrowsSpecificNamed([managedObject valueForKey:@"foo"], NSException, NSUndefinedKeyException, nil);
@@ -92,6 +92,13 @@
     
     STAssertEqualObjects([template renderObject:nil error:NULL], @"foo:", nil);
     STAssertEqualObjects([template renderObject:nil error:NULL], @"foo:", nil);
+}
+
+- (void)testNSUndefinedKeyExceptionPreventionInThread
+{
+    NSThread *thread = [[[NSThread alloc] initWithTarget:self selector:@selector(testNSUndefinedKeyExceptionPrevention) object:nil] autorelease];
+    [thread start];
+    while (!thread.isFinished);
 }
 
 @end

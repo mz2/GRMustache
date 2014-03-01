@@ -1,6 +1,6 @@
 // The MIT License
 // 
-// Copyright (c) 2012 Gwendal Roué
+// Copyright (c) 2014 Gwendal Roué
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,6 @@
 
 #define GRMUSTACHE_VERSION_MAX_ALLOWED GRMUSTACHE_VERSION_6_0
 #import "GRMustachePublicAPITest.h"
-#import "JSONKit.h"
 
 @interface GRMustacheTemplateFromMethodsTest : GRMustachePublicAPITest
 @end
@@ -94,7 +93,9 @@
 - (id)valueForKey:(NSString *)key inRendering:(NSString *)rendering
 {
     NSError *error;
-    id object = [rendering objectFromJSONStringWithParseOptions:JKParseOptionNone error:&error];
+
+    NSData *data = [rendering dataUsingEncoding:NSUTF8StringEncoding];
+    id object = [self JSONObjectWithData:data error:&error];
     STAssertNotNil(object, @"%@", error);
     return [object valueForKey:key];
 }
@@ -109,6 +110,39 @@
     NSString *fileName = [self valueForKey:@"fileName" inRendering:rendering];
     return [fileName pathExtension];
 }
+
+- (void)testGRMustacheTemplateFromNilString
+{
+    NSError *error;
+    STAssertNil([GRMustacheTemplate templateFromString:nil error:&error], @"");
+    STAssertEqualObjects(error.domain, GRMustacheErrorDomain, @"");
+    STAssertEquals(error.code, GRMustacheErrorCodeTemplateNotFound, @"");
+}
+
+- (void)testGRMustacheTemplateFromNilResource
+{
+    NSError *error;
+    STAssertNil([GRMustacheTemplate templateFromResource:nil bundle:nil error:&error], @"");
+    STAssertEqualObjects(error.domain, GRMustacheErrorDomain, @"");
+    STAssertEquals(error.code, GRMustacheErrorCodeTemplateNotFound, @"");
+}
+
+- (void)testGRMustacheTemplateFromNilFile
+{
+    NSError *error;
+    STAssertNil([GRMustacheTemplate templateFromContentsOfFile:nil error:&error], @"");
+    STAssertEqualObjects(error.domain, GRMustacheErrorDomain, @"");
+    STAssertEquals(error.code, GRMustacheErrorCodeTemplateNotFound, @"");
+}
+
+- (void)testGRMustacheTemplateFromNilURL
+{
+    NSError *error;
+    STAssertNil([GRMustacheTemplate templateFromContentsOfURL:nil error:&error], @"");
+    STAssertEqualObjects(error.domain, GRMustacheErrorDomain, @"");
+    STAssertEquals(error.code, GRMustacheErrorCodeTemplateNotFound, @"");
+}
+
 
 - (void)test_templateFromString_error
 {

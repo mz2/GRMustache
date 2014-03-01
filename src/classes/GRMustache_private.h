@@ -1,6 +1,6 @@
 // The MIT License
 // 
-// Copyright (c) 2012 Gwendal Roué
+// Copyright (c) 2014 Gwendal Roué
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,6 @@
 @protocol GRMustacheRendering;
 @class GRMustacheTag;
 @class GRMustacheContext;
-@class GRMustacheTemplateRepository;
 
 // Documented in GRMustache.h
 typedef struct {
@@ -44,14 +43,12 @@ typedef struct {
 + (void)preventNSUndefinedKeyExceptionAttack GRMUSTACHE_API_PUBLIC;
 
 // Documented in GRMustache.h
++ (NSObject *)standardLibrary GRMUSTACHE_API_PUBLIC;
+
+// Documented in GRMustache.h
 + (id<GRMustacheRendering>)renderingObjectForObject:(id)object GRMUSTACHE_API_PUBLIC;
 
 // Documented in GRMustache.h
 + (id<GRMustacheRendering>)renderingObjectWithBlock:(NSString *(^)(GRMustacheTag *tag, GRMustacheContext *context, BOOL *HTMLSafe, NSError **error))block GRMUSTACHE_API_PUBLIC;
-
-/**
- * TODO
- */
-+ (id<GRMustacheRendering>)renderingObjectWithObject:(id)object implementation:(IMP)implementation GRMUSTACHE_API_INTERNAL;
 
 @end

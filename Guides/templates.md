@@ -3,29 +3,34 @@
 Templates
 =========
 
-You'll learn here how to load, and render templates. The [Runtime Guide](runtime.md) talks about what happens *during* the rendering itself.
+You'll learn here how to load, and render templates. The [Runtime Guide](runtime.md) talks about what happens *during* the rendering itself. Common patterns for feeding templates are described in the [ViewModel Guides](view_model.md).
 
 Errors
 ------
 
 Not funny, but those happens.
 
-Once and for all: GRMustache methods may return errors, or throw exceptions:
-
 ```objc
 extern NSString * const GRMustacheRenderingException;
-
 extern NSString * const GRMustacheErrorDomain;
 
 typedef enum {
-    GRMustacheErrorCodeParseError,
-    GRMustacheErrorCodeTemplateNotFound,
+    GRMustacheErrorCodeParseError,          // bad Mustache syntax
+    GRMustacheErrorCodeTemplateNotFound,    // missing template
+    GRMustacheErrorCodeRenderingError,      // bad food
 } GRMustacheErrorCode;
 ```
 
-Errors are returned when templates are missing or could not be parsed.
+GRMustache usually returns regular NSError objects of domain `GRMustacheErrorDomain`. Exceptions are only thrown for rare programming errors such as inconsistently rendering both HTML and text in a loop of [rendering objects](rendering_objects.md).
 
-Exceptions are raised for missing or invalid [filters](filters.md).
+As a convenience, if your code does not explictly handle errors (if you provide a NULL error pointer), GRMustache will log them:
+
+```objc
+NSString *rendering = [GRMustacheTemplate renderObject:self.currentUser
+                                          fromResource:@"Profile"
+                                                bundle:nil
+                                                 error:NULL]; // NULL triggers error logging
+```
 
 On-the-fly rendering methods
 ----------------------------

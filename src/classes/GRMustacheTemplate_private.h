@@ -1,6 +1,6 @@
 // The MIT License
 // 
-// Copyright (c) 2012 Gwendal Roué
+// Copyright (c) 2014 Gwendal Roué
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,39 +20,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#import <Foundation/Foundation.h>
 #import "GRMustacheAvailabilityMacros_private.h"
-#import "GRMustache_private.h"
-#import "GRMustacheTagDelegate.h"
-#import "GRMustacheTemplateComponent_private.h"
+
+@class GRMustacheContext;
+@class GRMustacheAST;
+@protocol GRMustacheTagDelegate;
 
 // Documented in GRMustacheTemplate.h
-@interface GRMustacheTemplate: NSObject<GRMustacheTemplateComponent> {
+@interface GRMustacheTemplate: NSObject {
 @private
-    NSArray *_components;
+    GRMustacheAST *_AST;
     GRMustacheContext *_baseContext;
 }
 
 /**
- * The GRMustacheTemplateComponent objects that make the template.
- *
- * @see GRMustacheTemplateComponent
+ * The abstract syntax tree of the partial template.
  */
-@property (nonatomic, retain) NSArray *components GRMUSTACHE_API_INTERNAL;
+@property (nonatomic, retain) GRMustacheAST *AST GRMUSTACHE_API_INTERNAL;
 
 // Documented in GRMustacheTemplate.h
 @property (nonatomic, retain) GRMustacheContext *baseContext GRMUSTACHE_API_PUBLIC;
 
 // Documented in GRMustacheTemplate.h
-+ (id)templateFromString:(NSString *)templateString error:(NSError **)error GRMUSTACHE_API_PUBLIC;
+- (void)extendBaseContextWithObject:(id)object GRMUSTACHE_API_PUBLIC;
 
 // Documented in GRMustacheTemplate.h
-+ (id)templateFromContentsOfFile:(NSString *)path error:(NSError **)error GRMUSTACHE_API_PUBLIC;
+- (void)extendBaseContextWithProtectedObject:(id)object GRMUSTACHE_API_PUBLIC;
 
 // Documented in GRMustacheTemplate.h
-+ (id)templateFromContentsOfURL:(NSURL *)URL error:(NSError **)error GRMUSTACHE_API_PUBLIC;
+- (void)extendBaseContextWithTagDelegate:(id<GRMustacheTagDelegate>)tagDelegate GRMUSTACHE_API_PUBLIC;
 
 // Documented in GRMustacheTemplate.h
-+ (id)templateFromResource:(NSString *)name bundle:(NSBundle *)bundle error:(NSError **)error GRMUSTACHE_API_PUBLIC;
++ (instancetype)templateFromString:(NSString *)templateString error:(NSError **)error GRMUSTACHE_API_PUBLIC;
+
+// Documented in GRMustacheTemplate.h
++ (instancetype)templateFromContentsOfFile:(NSString *)path error:(NSError **)error GRMUSTACHE_API_PUBLIC;
+
+// Documented in GRMustacheTemplate.h
++ (instancetype)templateFromContentsOfURL:(NSURL *)URL error:(NSError **)error GRMUSTACHE_API_PUBLIC;
+
+// Documented in GRMustacheTemplate.h
++ (instancetype)templateFromResource:(NSString *)name bundle:(NSBundle *)bundle error:(NSError **)error GRMUSTACHE_API_PUBLIC;
 
 // Documented in GRMustacheTemplate.h
 + (NSString *)renderObject:(id)object fromString:(NSString *)templateString error:(NSError **)error GRMUSTACHE_API_PUBLIC;

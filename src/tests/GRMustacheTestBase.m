@@ -1,6 +1,6 @@
 // The MIT License
 // 
-// Copyright (c) 2012 Gwendal Roué
+// Copyright (c) 2014 Gwendal Roué
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,10 @@
 #import "GRMustacheTemplate_private.h"
 #import "GRMustacheTestBase.h"
 
+#ifdef GRMUSTACHE_USE_JSONKIT
+#import "JSONKit.h"
+#endif
+
 @implementation GRMustacheTestBase
 @dynamic testBundle;
 
@@ -31,16 +35,40 @@
     return [NSBundle bundleWithIdentifier:@"com.github.groue.GRMustache"];
 }
 
+- (id)JSONObjectWithData:(NSData *)data error:(NSError **)error
+{
+#ifdef GRMUSTACHE_USE_JSONKIT
+    return [data objectFromJSONDataWithParseOptions:JKParseOptionComments error:error];
+#else
+    // Naive support for single line comments "// ..."
+    NSString *string = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+    NSMutableString *commentLessString = [NSMutableString string];
+    NSScanner *scanner = [NSScanner scannerWithString:string];
+    [scanner setCharactersToBeSkipped:nil]; // Keep newlines
+    while (![scanner isAtEnd]) {
+        NSString *chunk;
+        if ([scanner scanUpToString:@"//" intoString:&chunk]) {
+            [commentLessString appendString:chunk];
+        }
+        [scanner scanUpToString:@"\n" intoString:NULL];
+    }
+    data = [commentLessString dataUsingEncoding:NSUTF8StringEncoding];
+    return [NSJSONSerialization JSONObjectWithData:data options:0 error:error];
+#endif
+}
+
 @end
 
 @implementation GRMustacheTestingDelegate
 @synthesize mustacheTagWillRenderBlock=_mustacheTagWillRenderBlock;
-@synthesize mustacheTagDidRenderBlock=_mustacheTagDidRenderBlock;
+@synthesize mustacheTagDidRenderAsBlock=_mustacheTagDidRenderAsBlock;
+@synthesize mustacheTagDidFailBlock=_mustacheTagDidFailBlock;
 
 - (void)dealloc
 {
     self.mustacheTagWillRenderBlock = nil;
-    self.mustacheTagDidRenderBlock = nil;
+    self.mustacheTagDidRenderAsBlock = nil;
+    self.mustacheTagDidFailBlock = nil;
     [super dealloc];
 }
 
@@ -55,8 +83,15 @@
 
 - (void)mustacheTag:(GRMustacheTag *)tag didRenderObject:(id)object as:(NSString *)rendering
 {
-    if (self.mustacheTagDidRenderBlock) {
-        self.mustacheTagDidRenderBlock(tag, object, rendering);
+    if (self.mustacheTagDidRenderAsBlock) {
+        self.mustacheTagDidRenderAsBlock(tag, object, rendering);
+    }
+}
+
+- (void)mustacheTag:(GRMustacheTag *)tag didFailRenderingObject:(id)object withError:(NSError *)error
+{
+    if (self.mustacheTagDidFailBlock) {
+        self.mustacheTagDidFailBlock(tag, object, error);
     }
 }
 

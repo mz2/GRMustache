@@ -1,6 +1,6 @@
 // The MIT License
 // 
-// Copyright (c) 2012 Gwendal Roué
+// Copyright (c) 2014 Gwendal Roué
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,6 @@
 
 #define GRMUSTACHE_VERSION_MAX_ALLOWED GRMUSTACHE_VERSION_6_0
 #import "GRMustachePublicAPITest.h"
-#import "JSONKit.h"
 
 @interface GRMustacheTemplateRenderMethodsTest : GRMustachePublicAPITest
 @end
@@ -72,7 +71,9 @@
 - (id)valueForKey:(NSString *)key inRendering:(NSString *)rendering
 {
     NSError *error;
-    id object = [rendering objectFromJSONStringWithParseOptions:JKParseOptionNone error:&error];
+    
+    NSData *data = [rendering dataUsingEncoding:NSUTF8StringEncoding];
+    id object = [self JSONObjectWithData:data error:&error];
     STAssertNotNil(object, @"%@", error);
     return [object valueForKey:key];
 }
@@ -93,6 +94,22 @@
 {
     NSString *fileName = [self valueForKey:@"fileName" inRendering:rendering];
     return [fileName pathExtension];
+}
+
+- (void)testGRMustacheTemplateRenderObjectFromNilString
+{
+    NSError *error;
+    STAssertNil([GRMustacheTemplate renderObject:nil fromString:nil error:&error], @"");
+    STAssertEqualObjects(error.domain, GRMustacheErrorDomain, @"");
+    STAssertEquals(error.code, GRMustacheErrorCodeTemplateNotFound, @"");
+}
+
+- (void)testGRMustacheTemplateRenderObjectFromNilResource
+{
+    NSError *error;
+    STAssertNil([GRMustacheTemplate renderObject:nil fromResource:nil bundle:nil error:&error], @"");
+    STAssertEqualObjects(error.domain, GRMustacheErrorDomain, @"");
+    STAssertEquals(error.code, GRMustacheErrorCodeTemplateNotFound, @"");
 }
 
 - (void)testGRMustacheTemplate_renderObject

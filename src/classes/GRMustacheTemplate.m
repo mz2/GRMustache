@@ -1,6 +1,6 @@
 // The MIT License
 // 
-// Copyright (c) 2012 Gwendal Roué
+// Copyright (c) 2014 Gwendal Roué
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,28 +23,30 @@
 #import "GRMustacheTemplate_private.h"
 #import "GRMustacheContext_private.h"
 #import "GRMustacheTemplateRepository_private.h"
-#import "GRMustacheSectionTag_private.h"
 #import "GRMustacheRendering.h"
+#import "GRMustacheTemplateComponent_private.h"
+#import "GRMustacheAST_private.h"
 
 @interface GRMustacheTemplate()<GRMustacheRendering>
 @end
 
 @implementation GRMustacheTemplate
-@synthesize components=_components;
+@synthesize AST=_AST;
+@synthesize baseContext=_baseContext;
 
-+ (id)templateFromString:(NSString *)templateString error:(NSError **)error
++ (instancetype)templateFromString:(NSString *)templateString error:(NSError **)error
 {
     GRMustacheTemplateRepository *templateRepository = [GRMustacheTemplateRepository templateRepositoryWithBundle:[NSBundle mainBundle]];
     return [templateRepository templateFromString:templateString error:error];
 }
 
-+ (id)templateFromResource:(NSString *)name bundle:(NSBundle *)bundle error:(NSError **)error
++ (instancetype)templateFromResource:(NSString *)name bundle:(NSBundle *)bundle error:(NSError **)error
 {
     GRMustacheTemplateRepository *templateRepository = [GRMustacheTemplateRepository templateRepositoryWithBundle:bundle];
     return [templateRepository templateNamed:name error:error];
 }
 
-+ (id)templateFromContentsOfFile:(NSString *)path error:(NSError **)error
++ (instancetype)templateFromContentsOfFile:(NSString *)path error:(NSError **)error
 {
     NSString *directoryPath = [path stringByDeletingLastPathComponent];
     NSString *templateExtension = [path pathExtension];
@@ -53,7 +55,7 @@
     return [templateRepository templateNamed:templateName error:error];
 }
 
-+ (id)templateFromContentsOfURL:(NSURL *)URL error:(NSError **)error
++ (instancetype)templateFromContentsOfURL:(NSURL *)URL error:(NSError **)error
 {
     NSURL *baseURL = [URL URLByDeletingLastPathComponent];
     NSString *templateExtension = [URL pathExtension];
@@ -76,25 +78,24 @@
 
 - (void)dealloc
 {
-    [_components release];
+    [_AST release];
     [_baseContext release];
     [super dealloc];
 }
 
-- (GRMustacheContext *)baseContext
+- (void)extendBaseContextWithObject:(id)object
 {
-    if (_baseContext == nil) {
-        _baseContext = [[GRMustacheContext context] retain];
-    }
-    return [[_baseContext retain] autorelease];
+    self.baseContext = [self.baseContext contextByAddingObject:object];
 }
 
-- (void)setBaseContext:(GRMustacheContext *)baseContext
+- (void)extendBaseContextWithProtectedObject:(id)object
 {
-    if (_baseContext != baseContext) {
-        [_baseContext release];
-        _baseContext = [baseContext retain];
-    }
+    self.baseContext = [self.baseContext contextByAddingProtectedObject:object];
+}
+
+- (void)extendBaseContextWithTagDelegate:(id<GRMustacheTagDelegate>)tagDelegate
+{
+    self.baseContext = [self.baseContext contextByAddingTagDelegate:tagDelegate];
 }
 
 - (NSString *)renderObject:(id)object error:(NSError **)error
@@ -115,53 +116,42 @@
 - (NSString *)renderContentWithContext:(GRMustacheContext *)context HTMLSafe:(BOOL *)HTMLSafe error:(NSError **)error
 {
     NSMutableString *buffer = [NSMutableString string];
-    if (![self renderInBuffer:buffer withContext:context error:error]) {
+
+    if (!context) {
+        // With a nil context, the method would return nil without setting the
+        // error argument.
+        [NSException raise:NSInvalidArgumentException format:@"Invalid context:nil"];
         return nil;
     }
+    
+    GRMustacheContentType templateContentType = _AST.contentType;
+    for (id<GRMustacheTemplateComponent> component in _AST.templateComponents) {
+        // component may be overriden by a GRMustachePartialOverride: resolve it.
+        component = [context resolveTemplateComponent:component];
+        
+        // render
+        if (![component renderContentType:templateContentType inBuffer:buffer withContext:context error:error]) {
+            return nil;
+        }
+    }
+    
     if (HTMLSafe) {
-        *HTMLSafe = YES;
+        *HTMLSafe = (_AST.contentType == GRMustacheContentTypeHTML);
     }
     return buffer;
 }
 
-
-#pragma mark - <GRMustacheTemplateComponent>
-
-- (BOOL)renderInBuffer:(NSMutableString *)buffer withContext:(GRMustacheContext *)context error:(NSError **)error
+- (void)setBaseContext:(GRMustacheContext *)baseContext
 {
-    for (id<GRMustacheTemplateComponent> component in _components) {
-        // component may be overriden by a GRMustacheTemplateOverride: resolve it.
-        component = [context resolveTemplateComponent:component];
-        
-        // render
-        if (![component renderInBuffer:buffer withContext:context error:error]) {
-            return NO;
-        }
+    if (!baseContext) {
+        [NSException raise:NSInvalidArgumentException format:@"Invalid baseContext:nil"];
+        return;
     }
     
-    return YES;
-}
-
-- (id<GRMustacheTemplateComponent>)resolveTemplateComponent:(id<GRMustacheTemplateComponent>)component
-{
-    // look for the last overriding component in inner components.
-    //
-    // This allows a partial do define an overriding section:
-    //
-    //    {
-    //        data: { },
-    //        expected: "partial1",
-    //        name: "Partials in overridable partials can override overridable sections",
-    //        template: "{{<partial2}}{{>partial1}}{{/partial2}}"
-    //        partials: {
-    //            partial1: "{{$overridable}}partial1{{/overridable}}";
-    //            partial2: "{{$overridable}}ignored{{/overridable}}";
-    //        },
-    //    }
-    for (id<GRMustacheTemplateComponent> innerComponent in _components) {
-        component = [innerComponent resolveTemplateComponent:component];
+    if (_baseContext != baseContext) {
+        [_baseContext release];
+        _baseContext = [baseContext retain];
     }
-    return component;
 }
 
 
