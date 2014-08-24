@@ -326,6 +326,13 @@ static NSString *GRPreventedObjectsStorageKey = @"GRPreventedObjectsStorageKey";
 // NSObject
 - (id)GRMustacheKeyAccessValueForUndefinedKey_NSObject:(NSString *)key
 {
+    SEL keySel = NSSelectorFromString(key);
+    if ([self respondsToSelector:keySel])
+        return [self performSelector:keySel]; // runtime added properties receive -valueForUndefinedKey:
+    
+    assert(key);
+    assert(key.length > 0);
+    
     if ([getCurrentThreadPreventedObjects() containsObject:self]) {
         return nil;
     }
