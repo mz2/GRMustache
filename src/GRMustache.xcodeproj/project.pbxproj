@@ -2665,6 +2665,152 @@
 			};
 			name = Testing;
 		};
+		5F5865BE1AC86475000DC9D4 /* Internal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				MACOSX_DEPLOYMENT_TARGET = "";
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Internal;
+		};
+		5F5865BF1AC86475000DC9D4 /* Internal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				COMBINE_HIDPI_IMAGES = YES;
+				DSTROOT = "/tmp/$(TARGET_NAME).dst";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = include/GRMustache;
+				SKIP_INSTALL = YES;
+				VALID_ARCHS = x86_64;
+			};
+			name = Internal;
+		};
+		5F5865C01AC86475000DC9D4 /* Internal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				INFOPLIST_FILE = "tests/GRMustache6Tests-Info.plist";
+				OTHER_CFLAGS = "-DGRMUSTACHE_USE_JSONKIT";
+				OTHER_LDFLAGS = "-all_load";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Internal;
+		};
+		5F5865C11AC86475000DC9D4 /* Internal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				INFOPLIST_FILE = "tests/GRMustache6Tests-GC-Info.plist";
+				OTHER_LDFLAGS = "-all_load";
+				PRODUCT_NAME = "GRMustache6-MacOSTests-GC";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Internal;
+		};
+		5F5865C21AC86475000DC9D4 /* Internal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				DSTROOT = "/tmp/$(TARGET_NAME).dst";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_THUMB_SUPPORT = NO;
+				OTHER_CFLAGS = "-DTARGET_OS_IPHONE";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Internal;
+		};
+		5F5865C31AC86475000DC9D4 /* Internal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				INFOPLIST_FILE = "tests/GRMustache6Tests-Info.plist";
+				OTHER_CFLAGS = "-DGRMUSTACHE_USE_JSONKIT";
+				OTHER_LDFLAGS = "-all_load";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Internal;
+		};
+		5F5865C41AC86475000DC9D4 /* Internal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				DSTROOT = "/tmp/$(TARGET_NAME).dst";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_THUMB_SUPPORT = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_CFLAGS = "-DTARGET_OS_IPHONE";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Internal;
+		};
+		5F5865C51AC86475000DC9D4 /* Internal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				INFOPLIST_FILE = "tests/GRMustache6Tests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_CFLAGS = "-DGRMUSTACHE_USE_JSONKIT";
+				OTHER_LDFLAGS = "-all_load";
+				PRODUCT_NAME = "GRMustache6-iOS-arm64-Tests";
+				SDKROOT = iphoneos;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Internal;
+		};
 		ABAF86A316A0A65A001ADE96 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2702,6 +2848,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				56A731101805258300B8570A /* Debug */,
+				5F5865C41AC86475000DC9D4 /* Internal */,
 				5F4DF39118E7857F00E7D65A /* Testing */,
 				56A731111805258300B8570A /* Release */,
 			);
@@ -2712,6 +2859,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				56A731661805276A00B8570A /* Debug */,
+				5F5865C51AC86475000DC9D4 /* Internal */,
 				5F4DF39218E7857F00E7D65A /* Testing */,
 				56A731671805276A00B8570A /* Release */,
 			);
@@ -2722,6 +2870,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				56DEC1B215262FC90031E8DC /* Debug */,
+				5F5865BE1AC86475000DC9D4 /* Internal */,
 				5F4DF38B18E7857F00E7D65A /* Testing */,
 				56DEC1B315262FC90031E8DC /* Release */,
 			);
@@ -2732,6 +2881,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				56DEC265152631040031E8DC /* Debug */,
+				5F5865BF1AC86475000DC9D4 /* Internal */,
 				5F4DF38C18E7857F00E7D65A /* Testing */,
 				56DEC266152631040031E8DC /* Release */,
 			);
@@ -2742,6 +2892,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				56DEC268152631040031E8DC /* Debug */,
+				5F5865C01AC86475000DC9D4 /* Internal */,
 				5F4DF38D18E7857F00E7D65A /* Testing */,
 				56DEC269152631040031E8DC /* Release */,
 			);
@@ -2752,6 +2903,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				56DEC28C1526311C0031E8DC /* Debug */,
+				5F5865C21AC86475000DC9D4 /* Internal */,
 				5F4DF38F18E7857F00E7D65A /* Testing */,
 				56DEC28D1526311C0031E8DC /* Release */,
 			);
@@ -2762,6 +2914,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				56DEC28F1526311C0031E8DC /* Debug */,
+				5F5865C31AC86475000DC9D4 /* Internal */,
 				5F4DF39018E7857F00E7D65A /* Testing */,
 				56DEC2901526311C0031E8DC /* Release */,
 			);
@@ -2772,6 +2925,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				ABAF86A316A0A65A001ADE96 /* Debug */,
+				5F5865C11AC86475000DC9D4 /* Internal */,
 				5F4DF38E18E7857F00E7D65A /* Testing */,
 				ABAF86A416A0A65A001ADE96 /* Release */,
 			);
