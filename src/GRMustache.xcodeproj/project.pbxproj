@@ -513,7 +513,7 @@
 		5F9E9D611C33E002002A5F4D /* GRMustacheConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B11A1416B3A581009F184F /* GRMustacheConfiguration.m */; };
 		5F9E9D621C33E00B002A5F4D /* GRMustacheExpressionParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 568ECC31175DB0CD00F1178F /* GRMustacheExpressionParser.m */; };
 		5F9E9D631C33E00B002A5F4D /* GRMustacheParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DEC2B7152631300031E8DC /* GRMustacheParser.m */; };
-		5F9E9D641C33E00B002A5F4D /* GRMustacheTemplateRepository.h in Headers */ = {isa = PBXBuildFile; fileRef = 56DEC2B0152631300031E8DC /* GRMustacheTemplateRepository.h */; };
+		5F9E9D641C33E00B002A5F4D /* GRMustacheTemplateRepository.h in Headers */ = {isa = PBXBuildFile; fileRef = 56DEC2B0152631300031E8DC /* GRMustacheTemplateRepository.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5F9E9D651C33E00B002A5F4D /* GRMustacheTemplateRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DEC2B1152631300031E8DC /* GRMustacheTemplateRepository.m */; };
 		5F9E9D661C33E00B002A5F4D /* GRMustacheToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DEC2B5152631300031E8DC /* GRMustacheToken.m */; };
 		5F9E9D671C33E010002A5F4D /* GRMustacheExpressionParser_private.h in Headers */ = {isa = PBXBuildFile; fileRef = 568ECC30175DB0CC00F1178F /* GRMustacheExpressionParser_private.h */; };
