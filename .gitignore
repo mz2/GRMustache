@@ -29,3 +29,5 @@ Icon
 
 # Build
 src/build
+
+Carthage/Build
