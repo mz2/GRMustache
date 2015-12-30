@@ -589,6 +589,7 @@
 		5F9E9DAD1C33E0A2002A5F4D /* GRMustacheError.h in Headers */ = {isa = PBXBuildFile; fileRef = 56DEC29A152631300031E8DC /* GRMustacheError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5F9E9DAE1C33E0AA002A5F4D /* JRSwizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 563D670115264EDA008628C5 /* JRSwizzle.h */; };
 		5F9E9DAF1C33E0AD002A5F4D /* JRSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 563D670215264EDA008628C5 /* JRSwizzle.m */; };
+		5FCDF2661C3437440091889C /* GRMustacheAvailabilityMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 56DEC295152631300031E8DC /* GRMustacheAvailabilityMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		ABAF866616A0A65A001ADE96 /* GRMustachePrivateAPITest.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DEC3B0152638E20031E8DC /* GRMustachePrivateAPITest.m */; };
 		ABAF866716A0A65A001ADE96 /* GRMustachePublicAPITest.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DEC3B2152638E20031E8DC /* GRMustachePublicAPITest.m */; };
 		ABAF866816A0A65A001ADE96 /* GRMustacheTestBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DEC3B4152638E20031E8DC /* GRMustacheTestBase.m */; };
@@ -1646,6 +1647,7 @@
 			files = (
 				5F9E9D6C1C33E018002A5F4D /* GRMustacheFilteredExpression_private.h in Headers */,
 				5F9E9D5F1C33DFF1002A5F4D /* GRMustacheConfiguration.h in Headers */,
+				5FCDF2661C3437440091889C /* GRMustacheAvailabilityMacros.h in Headers */,
 				5F9E9D751C33E024002A5F4D /* GRMustacheAST_private.h in Headers */,
 				5F9E9D6E1C33E018002A5F4D /* GRMustacheImplicitIteratorExpression_private.h in Headers */,
 				5F9E9D601C33DFFC002A5F4D /* GRMustacheConfiguration_private.h in Headers */,
@@ -3379,6 +3381,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MODULEMAP_FILE = "${PROJECT_DIR}/../Modules/GRMustache.modulemap";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.manuscriptsapp.GRMustache;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3417,6 +3420,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MODULEMAP_FILE = "${PROJECT_DIR}/../Modules/GRMustache.modulemap";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.manuscriptsapp.GRMustache;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3455,6 +3459,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MODULEMAP_FILE = "${PROJECT_DIR}/../Modules/GRMustache.modulemap";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.manuscriptsapp.GRMustache;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3493,6 +3498,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MODULEMAP_FILE = "${PROJECT_DIR}/../Modules/GRMustache.modulemap";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.manuscriptsapp.GRMustache;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3531,6 +3537,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MODULEMAP_FILE = "${PROJECT_DIR}/../Modules/GRMustache.modulemap";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.manuscriptsapp.GRMustache;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3569,6 +3576,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MODULEMAP_FILE = "${PROJECT_DIR}/../Modules/GRMustache.modulemap";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.manuscriptsapp.GRMustache;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3713,6 +3721,7 @@
 				5F9E9D5D1C33DFD4002A5F4D /* AppStoreRelease */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		ABAF86A216A0A65A001ADE96 /* Build configuration list for PBXNativeTarget "GRMustache6-MacOSTests-GC" */ = {
 			isa = XCConfigurationList;
