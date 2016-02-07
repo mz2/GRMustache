@@ -19,7 +19,6 @@ FOUNDATION_EXPORT const unsigned char GRMustacheVersionString[];
 #import "GRMustacheConfiguration.h"
 #import "GRMustacheTemplateRepository.h"
 #import "GRMustacheTemplate.h"
-#import "GRMustacheParser.h"
 #import "GRMustacheTag.h"
 #import "GRMustacheContext.h"
 #import "GRMustacheFilter.h"
