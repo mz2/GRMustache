@@ -1,5 +1,5 @@
 framework module GRMustache {
-  umbrella header "GRMustache.h"
+  umbrella header "GRMustache-Framework.h"
 
   export *
   module * { export * }

@@ -29,5 +29,6 @@ FOUNDATION_EXPORT const unsigned char GRMustacheVersionString[];
 #import "GRMustacheContentType.h"
 #import "GRMustacheError.h"
 #import "GRMustacheVersion.h"
+#import "GRMustache.h"
 
 #import "GRMustacheAvailabilityMacros.h"
